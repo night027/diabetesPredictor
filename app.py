@@ -36,6 +36,15 @@ def predict_api():
     with torch.no_grad():
         output = model(new_data).argmax().item()
     return jsonify(output)
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = [float(x) for x in request.form.values()]
+    final_input = torch.FloatTensor(data)
+    print(final_input)
+    with torch.no_grad():
+        output = model(final_input).argmax().item()
+    return render_template("home.html", prediction_text="Your diabetes test result is {}".format(output))
         
 if __name__ == "__main__":
     app.run(debug=True)
